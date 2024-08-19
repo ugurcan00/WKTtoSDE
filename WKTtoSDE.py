@@ -2,7 +2,7 @@ import pandas as pd
 import arcpy 
 from arcpy import env
 import cx_Oracle 
-conn = cx_Oracle.connect('SDE/Ls9D4mHSYdk!@IETTPROD')
+conn = cx_Oracle.connect('username/password@tnsname')
 cursor = conn.cursor()
 # Function to execute a query and return a DataFrame
 def fetch_data_to_dataframe(query, conn):
@@ -34,18 +34,18 @@ def fetch_data_to_dataframe(query, conn):
         print("Oracle bağlantısı kapatıldı.")
 
 # Example query to fetch data
-query = "SELECT * FROM HATYONETIM_GUZERGAHWKT"
+query = "SELECT * FROM wktkatmani"
 df = fetch_data_to_dataframe(query, conn)
 
 # Display the dataframe if it was successfully created
 if df is not None:
     print(df)
 
-sde_connection = r"C:/YAYIN/PG/PG/IETTPROD.sde"
-output_fc = f"{sde_connection}/GUZERGAH_SHAPEWKT"
+sde_connection = r"sdeconnectiondizini"
+output_fc = f"{sde_connection}/sdegeomkatmani"
 # Boş bir Feature Class oluşturma
-spatial_ref = arcpy.SpatialReference(r"C:\YAYIN\7932.prj")  # WGS 84 (EPSG:4326) veya uygun başka bir koordinat sistemi
-arcpy.CreateFeatureclass_management(sde_connection, "GUZERGAH_SHAPEWKT", "POLYLINE", spatial_reference=spatial_ref)
+spatial_ref = arcpy.SpatialReference("wkidyadaprjdosyayolu")  # WGS 84 (EPSG:4326) veya uygun başka bir koordinat sistemi
+arcpy.CreateFeatureclass_management(sde_connection, "sdegeomkatmani", "pointpoligonyadapolyline", spatial_reference=spatial_ref)
 # Tüm sütunları Feature Class'a ekleme
 for column in df.columns:
     if column == 'WKT_GEOMETRY':  # Geometri sütunu zaten SHAPE@ ile işlenecek, atlıyoruz
